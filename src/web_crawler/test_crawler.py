@@ -1,7 +1,9 @@
+
 import unittest
 from unittest.mock import patch, mock_open
+from src.web_crawler import crawler
 
-import crawler
+ABS_MOD_PATH = "src.web_crawler"
 
 class TestWebCrawler(unittest.TestCase):
     def test_valid_url_within_domain(self):
@@ -71,7 +73,7 @@ class TestWebCrawler(unittest.TestCase):
         visited.add("http://example.com/page")
         self.assertFalse(crawler.valid_url(base_url, url, within_domain, visited), msg)
 
-    @patch('crawler.requests.get')
+    @patch(f'{ABS_MOD_PATH}.crawler.requests.get')
     def test_fetching_page(self, mock_get):
         msg = "Should fetch the page content and write to a file"
         base_url = "http://example.com"
@@ -80,10 +82,10 @@ class TestWebCrawler(unittest.TestCase):
         converter = crawler.html2text.HTML2Text()
         save_path = ""
         max_depth = 1
-
+        
         mock_get.return_value.status_code = 200
         mock_get.return_value.text = "<html></html>"
-        with patch('crawler.open', new_callable=mock_open) as mock_file:
+        with patch(f'{ABS_MOD_PATH}.crawler.open', new_callable=mock_open) as mock_file:
             crawler.crawl_page(base_url, max_depth, converter, save_path, url, within_domain)
             mock_file().write.assert_called_with("> http://example.com/\n\n\n\n")
 
