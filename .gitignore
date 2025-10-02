@@ -1,5 +1,6 @@
 #### PROJECT
-
+.env*
+.env.*
 
 
 #### DEV / FRAMEWORKS
